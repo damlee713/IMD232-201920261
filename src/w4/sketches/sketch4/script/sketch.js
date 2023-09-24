@@ -1,27 +1,40 @@
-let pos;
-let vel = [3, 5];
+let moverA;
+let moverB;
+let gravity;
+let wind;
 
 function setup() {
   setCanvasContainer('canvas', 3, 2, true);
   background(255);
-  pos = [width / 2, height / 2];
-
-  console.log('pos', pos);
-  console.log('vel', vel);
+  moverA = new Mover(width / 3, height / 2, 10);
+  moverB = new Mover((2 * width) / 3, height / 2, 1);
+  wind = createVector(0.5, 0);
+  gravity = createVector(0, 0.1);
 }
 
 function draw() {
-  background(20);
+  background(255);
 
-  pos[0] += vel[0];
-  pos[1] += vel[1];
-
-  ellipse(pos[0], pos[1], 50);
-
-  if (pos[0] < 0 || pos[0] > width) {
-    vel[0] *= -1;
+  let gravityA = createVector(gravity.x, gravity.y);
+  gravityA.mult(moverA.mass);
+  moverA.applyforce(gravityA);
+  if (mouseIsPressed && isMouseInsideCanvas()) {
+    moverA.applyforce(wind);
   }
-  if (pos[1] < 0 || pos[1] > heigth) {
-    vel[1] *= -1;
+  moverA.update();
+  moverA.checkEdges();
+  moverA.display();
+  moverA.displayVectors();
+
+  let gravityB = createVector(gravity.x, gravity.y);
+  gravityB.mult(moverB.mass);
+
+  moverB.applyforce(gravityB);
+  if (mouseIsPressed && isMouseInsideCanvas()) {
+    moverB.applyforce(wind);
   }
+  moverB.update();
+  moverB.checkEdges();
+  moverB.display();
+  moverB.displayVectors();
 }

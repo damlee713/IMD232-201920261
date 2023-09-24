@@ -1,22 +1,35 @@
-let position;
-let velocity;
+let moverA;
+let moverB;
+let gravity;
+let wind;
 
 function setup() {
   setCanvasContainer('canvas', 3, 2, true);
   background(255);
-  position = createVector(width / 2, height / 2);
-  velocity = createVector(3, 5);
+  moverA = new MoverWithMass(width / 2, height / 2, 10);
+  moverB = new MoverWithMass((2 * width) / 3, height / 2, 1);
+  wind = createVector(0.5, 0);
+  gravity = createVector(0, 0.1);
 }
 
 function draw() {
   background(255);
-  position.add(velocity);
-  ellipse(position.x, position.y, 50);
 
-  if (position.x < 0 || position.x > width) {
-    velocity.x *= -1;
+  moverA.applyforce(gravity);
+  if (mouseIsPressed && isMouseInsideCanvas()) {
+    moverA.applyforce(wind);
   }
-  if (position.y < 0 || position.y > height) {
-    velocity.y *= -1;
+  moverA.update();
+  moverA.checkEdges();
+  moverA.display();
+  moverA.displayVectors();
+
+  moverB.applyforce(gravity);
+  if (mouseIsPressed && isMouseInsideCanvas()) {
+    moverB.applyforce(wind);
   }
+  moverB.update();
+  moverB.checkEdges();
+  moverB.display();
+  moverB.displayVectors();
 }
