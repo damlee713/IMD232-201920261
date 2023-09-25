@@ -50,7 +50,7 @@ function displayVel() {
 function displayVis() {
   stroke('black');
   line(pos.x, pos.y, vis.x + pos.x, vis.y + pos.y);
-  if (mouseIsPressed) {
+  if (mouseIsPressed && isMouseInsideCanvas()) {
     vis.mult(-100);
   }
 }
