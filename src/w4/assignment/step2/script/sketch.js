@@ -1,35 +1,34 @@
-let mover;
+let moverA;
+let moverB;
 let gravity;
+let wind;
 let mVec;
-let pMVec;
+let pVec;
 
 function setup() {
-  setCanvasContainer('canvas', 1, 1, true);
-
-  mover = new Mover(width / 2, height / 2, 100);
-  gravity = createVector(0, 0.5);
-
-  mVec = createVector();
-  pMVec = createVector();
-
+  setCanvasContainer('canvas', 3, 2, true);
   background(255);
+  moverA = new Mover(width / 3, height / 2, 10);
+  gravity = createVector(0, 0.1);
+  wind = createVector(0.5, 0);
+  mVec = createVector();
+  pVec = createVector();
 }
 
 function draw() {
-  const force = p5.Vector.mult(gravity, mover.mass);
-
-  background(255);
-}
-
-function mouseMoved() {}
-
-function mousePressed() {}
-
-function mouseDragged() {}
-
-function mouseReleased() {
-  pMVec.set(pmouseX, pmouseY);
   mVec.set(mouseX, mouseY);
+  pVec.set(pmouseX, pmouseY);
+  const sVec = p5.Vector.sub(mVec, pVec);
+  sVec.setMag(2);
+  background(255);
 
-  mover.applyForce(throwingForce);
+  let gravityA = createVector(gravity.x, gravity.y);
+  gravityA.mult(moverA.mass);
+  moverA.applyforce(gravityA);
+  if (mouseIsPressed && isMouseInsideCanvas()) {
+    moverA.applyforce(sVec);
+  }
+  moverA.update();
+  moverA.checkEdges();
+  moverA.display();
 }

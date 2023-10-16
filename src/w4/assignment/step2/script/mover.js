@@ -1,30 +1,56 @@
 class Mover {
   constructor(x, y, mass) {
-    this.pos;
-    this.vel;
-    this.acc;
-    this.mass;
-    this.rad;
-    this.isHover;
-    this.isDragging;
-    this.draggingOffset;
+    this.pos = createVector(x, y);
+    this.vel = createVector(0, 0);
+    this.acc = createVector(0, 0);
+    this.accDisplay = createVector(0, 0);
+    this.mass = mass;
+    this.radius = this.mass ** 0.5 * 10;
+  }
+  applyforce(force) {
+    let forceDividedByMass = createVector(force.x, force.y);
+    forceDividedByMass.div(this.mass);
+    this.acc.add(forceDividedByMass);
+  }
+  update() {
+    this.vel.add(this.acc);
+    this.pos.add(this.vel);
+    this.accDisplay.set(this.acc);
+    this.acc.mult(0);
   }
 
-  applyForce(force) {}
-
-  update() {}
-
-  edgeBounce() {
-    const bounce = -0.7;
-    if (this.pos.x < 0 + this.rad) {
-      this.pos.x = 0 + this.rad;
+  contactEdge() {
+    if (this.pos.y >= height - 1 - this.radius - 1) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  checkEdges() {
+    const bounce = -0.9;
+    if (this.pos.x < 0 + this.radius) {
+      // let delta=this.pos.x-0;
+      // delta*=-1;
+      // this.pos.x=0+delta;
+      // this.vel.x*=1;
+      this.pos.x -= 0 + this.radius;
+      this.pos.x *= -1;
+      this.pos.x += 0 + this.radius;
       this.vel.x *= bounce;
-    } else if (this.pos.x > width - 1 - this.rad) {
-      this.pos.x = width - 1 - this.rad;
+    } else if (this.pos.x > width - 1 - this.radius) {
+      //얼마나 더 나갔나?
+      //width-1 에서 팅기므로 x에서 width-1값을 뺌
+      this.pos.x -= width - 1 - this.radius;
+      //-1 곱함(음수가 됨)
+      this.pos.x *= -1;
+      //width-1을 더함(양수가 됨)
+      this.pos.x += width - 1 - this.radius;
       this.vel.x *= bounce;
     }
-    if (this.pos.y > height - 1 - this.rad) {
-      this.pos.y = height - 1 - this.rad;
+    if (this.pos.y > height - 1 - this.radius) {
+      this.pos.y -= height - 1 - this.radius;
+      this.pos.y *= -1;
+      this.pos.y += height - 1 - this.radius;
       this.vel.y *= bounce;
     }
   }
@@ -32,25 +58,6 @@ class Mover {
   display() {
     noStroke();
     fill(0);
-    ellipse(this.pos.x, this.pos.y, 2 * this.rad);
-  }
-
-  mouseMoved(mX, mY) {
-    this.isHover =
-      (this.pos.x - mX) ** 2 + (this.pos.y - mY) ** 2 <= this.rad ** 2;
-  }
-
-  mousePressed(mX, mY) {
-    if (this.isHover) {
-    }
-  }
-
-  mouseDragged(mX, mY) {
-    if (this.isDragging) {
-    }
-  }
-
-  mouseReleased() {
-    this.isDragging = false;
+    ellipse(this.pos.x, this.pos.y, 2 * this.radius);
   }
 }
