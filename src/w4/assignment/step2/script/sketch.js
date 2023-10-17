@@ -19,7 +19,7 @@ function draw() {
   mVec.set(mouseX, mouseY);
   pVec.set(pmouseX, pmouseY);
   const sVec = p5.Vector.sub(mVec, pVec);
-  sVec.setMag(2);
+  sVec.setMag(10);
   background(255);
 
   let gravityA = createVector(gravity.x, gravity.y);
